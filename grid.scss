@@ -1,0 +1,97 @@
+$grid-columns: 12;
+//
+$grid-small:           1;
+$grid-medium:                  2;
+$grid-large:                            3;
+$grid-name:         'small' 'medium' 'large';
+$grid-width:          68px   1024px   1156px;
+$grid-padding:        16px     19px     20px;
+$grid-column-padding:  8px     10px     12px;
+$grid-column-width:   38px     53px     58px;
+$grid-column-gap:      8px     10px     12px;
+
+$grid-medium-lower-breakpoint: 1024px;
+$grid-medium-upper-breakpoint: 1280px;
+//
+@mixin clearfix {
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
+//
+@mixin grid-generator($size-index) {
+	$name: nth($grid-name, $size-index);
+	$size-column-gap: nth($grid-column-gap, $size-index);
+	$size-grid-padding: nth($grid-padding, $size-index);
+	$size-grid-width: nth($grid-width, $size-index);
+	$size-column-padding: nth($grid-column-padding, $size-index);
+	$size-column-width: nth($grid-column-width, $size-index);
+
+	$column-margin: $size-column-gap / 2;
+	$grid-padding-horizontal: $size-grid-padding - $column-margin;
+
+	@for $i from 1 to $grid-columns + 1 {
+		$width: ($size-column-width + 2 * $size-column-padding) * $i + $size-column-gap * ($i - 1);
+
+		.#{$name}-#{$i} {
+			width: $width;
+		}
+	}
+
+	.#{$name}-0 {
+		display: none;
+	}
+
+	.column {
+		padding: 0 $size-column-padding;
+		margin: 0 $column-margin;
+	}
+
+	.row {
+		width: $size-grid-width;
+		padding: 0 $grid-padding-horizontal;
+	}
+}
+
+.column {
+	float: left;
+	box-sizing: border-box;
+
+	&.no-padding-left {
+		padding-left: 0;
+	}
+	&.no-padding-right {
+		padding-right: 0;
+	}
+}
+
+.row {
+	margin: 0 auto;
+	box-sizing: border-box;
+
+	@include clearfix;
+}
+
+@media screen and (max-width: ($grid-medium-lower-breakpoint - 1)) {
+	@include grid-generator(1);
+}
+@media screen and (min-width: $grid-medium-lower-breakpoint) and (max-width: $grid-medium-upper-breakpoint) {
+	@include grid-generator(2);
+}
+@media screen and (min-width: ($grid-medium-upper-breakpoint + 1)) {
+	@include grid-generator(3);
+}
+
+//
+.row {
+	background: rgba(0, 0, 0, .1);
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.column {
+	background: rgba(0, 0, 0, .1);
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
